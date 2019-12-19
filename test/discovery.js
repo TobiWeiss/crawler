@@ -28,7 +28,7 @@ describe("Crawler link discovery", function() {
         var links =
             discover("  blah blah http://google.com/ " +
                      " blah blah https://fish.com/resource blah " +
-                     " //example.com");
+                     " //crawler.com");
 
         links.should.be.an("array");
         links.length.should.equal(2);
@@ -40,7 +40,7 @@ describe("Crawler link discovery", function() {
 
         var links =
             discover("  <a href='google.com'> " +
-                     " <img src=\"http://example.com/resource with spaces.txt\"> " +
+                     " <img src=\"http://crawler.com/resource with spaces.txt\"> " +
                      " url('thingo.com/test.html')");
 
         links.should.be.an("array");
@@ -54,7 +54,7 @@ describe("Crawler link discovery", function() {
 
         var links =
             discover("  <a href=google.com> " +
-                     " <img src=http://example.com/resource with spaces.txt> " +
+                     " <img src=http://crawler.com/resource with spaces.txt> " +
                      " url(thingo.com/test.html)");
 
         links.should.be.an("array");
@@ -67,7 +67,7 @@ describe("Crawler link discovery", function() {
     it("should replace all '&amp;'s with ampersands", function() {
 
         var links =
-            discover("<a href='http://example.com/resource?with&amp;query=params&amp;and=entities'>");
+            discover("<a href='http://crawler.com/resource?with&amp;query=params&amp;and=entities'>");
 
         links.should.be.an("array");
         links.length.should.equal(2);
@@ -78,7 +78,7 @@ describe("Crawler link discovery", function() {
     it("should replace all '&#38;'s and '&#x00026;'s with ampersands", function() {
 
         var links =
-            discover("<a href='http://example.com/resource?with&#38;query=params&#x00026;and=entities'>");
+            discover("<a href='http://crawler.com/resource?with&#38;query=params&#x00026;and=entities'>");
 
         links.should.be.an("array");
         links.length.should.equal(2);
@@ -89,7 +89,7 @@ describe("Crawler link discovery", function() {
     it("should replace all '&#x2f;'s with slashes", function() {
 
         var links =
-            discover("<a href='http:&#x2f;&#x2f;example.com&#x2f;resource'>");
+            discover("<a href='http:&#x2f;&#x2f;crawler.com&#x2f;resource'>");
 
         links.should.be.an("array");
         links.length.should.equal(1);
@@ -113,11 +113,11 @@ describe("Crawler link discovery", function() {
         crawler.parseHTMLComments = false;
 
         var links =
-            discover("  <!-- http://example.com/oneline_comment --> " +
+            discover("  <!-- http://crawler.com/oneline_comment --> " +
                      " <a href=google.com> " +
                      " <!-- " +
-                     " http://example.com/resource " +
-                     " <a href=example.com> " +
+                     " http://crawler.com/resource " +
+                     " <a href=crawler.com> " +
                      " -->");
 
         links.should.be.an("array");
@@ -130,11 +130,11 @@ describe("Crawler link discovery", function() {
         crawler.parseScriptTags = false;
 
         var links =
-            discover("  <script>var a = \"<a href='http://example.com/oneline_script'></a>\";</script> " +
+            discover("  <script>var a = \"<a href='http://crawler.com/oneline_script'></a>\";</script> " +
                      " <a href=google.com> " +
                      " <script type='text/javascript'> " +
-                     " http://example.com/resource " +
-                     " <a href=example.com> " +
+                     " http://crawler.com/resource " +
+                     " <a href=crawler.com> " +
                      " </SCRIPT>");
 
         links.should.be.an("array");
@@ -145,15 +145,15 @@ describe("Crawler link discovery", function() {
     it("should discover URLs legitimately ending with a quote or parenthesis", function() {
 
         var links =
-            discover("<a href='example.com/resource?with(parentheses)'>" +
-                     " <a href='example.com/resource?with\"double quotes\"'>" +
-                     " <a href=\"example.com/resource?with'single quotes'\">");
+            discover("<a href='crawler.com/resource?with(parentheses)'>" +
+                     " <a href='crawler.com/resource?with\"double quotes\"'>" +
+                     " <a href=\"crawler.com/resource?with'single quotes'\">");
 
         links.should.be.an("array");
         links.length.should.equal(3);
-        links[0].should.equal("example.com/resource?with%28parentheses%29");
-        links[1].should.equal("example.com/resource?with%22double+quotes%22");
-        links[2].should.equal("example.com/resource?with%27single+quotes%27");
+        links[0].should.equal("crawler.com/resource?with%28parentheses%29");
+        links[1].should.equal("crawler.com/resource?with%22double+quotes%22");
+        links[2].should.equal("crawler.com/resource?with%27single+quotes%27");
     });
 
     it("should discard 'javascript:' links except for any arguments in there passed to functions", function () {
@@ -172,7 +172,7 @@ describe("Crawler link discovery", function() {
     it("should not pick up 'href' or 'src' inside href attributes as full URL's", function () {
 
         var links =
-            discover("<a href='https://example.com/?src=3'>My web page</a>");
+            discover("<a href='https://crawler.com/?src=3'>My web page</a>");
 
         links.should.be.an("array");
         links.length.should.equal(2);
@@ -183,7 +183,7 @@ describe("Crawler link discovery", function() {
     it("should strip fragment identifiers from URL's", function () {
 
         var links =
-            discover("<a href='https://example.com/#section'>My web page</a>" +
+            discover("<a href='https://crawler.com/#section'>My web page</a>" +
                      "<a href='/other/page#blabla'>Link</a>" +
                      "<a href='#section'>Section</a>", { url: "https://example.com/" });
 
@@ -195,7 +195,7 @@ describe("Crawler link discovery", function() {
 
     it("should find resources in srcset attributes", function() {
         var links =
-            discover("<img src='pic.png' srcset='https://example.com/pic-200.png, /pic-400.png 400w, pic-800.png 2x'>", {
+            discover("<img src='pic.png' srcset='https://crawler.com/pic-200.png, /pic-400.png 400w, pic-800.png 2x'>", {
                 url: "https://example.com/"
             });
 

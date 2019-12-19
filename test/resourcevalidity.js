@@ -35,7 +35,7 @@ describe("Resource validity checker", function() {
         var crawler = makeCrawler("http://example.com:3000");
 
         // The domain itself should be allowed.
-        crawler.domainValid("example.com").should.equal(true);
+        crawler.domainValid("crawler.com").should.equal(true);
 
         // Whereas other domains should not be allowed.
         crawler.domainValid("somethingelse").should.equal(false);
@@ -52,21 +52,21 @@ describe("Resource validity checker", function() {
         crawler.scanSubdomains = true;
 
         // The domain itself isn't a subdomain per-se, but should be allowed
-        crawler.domainValid("example.com").should.equal(true);
+        crawler.domainValid("crawler.com").should.equal(true);
 
         // WWW is a subdomain
         crawler.domainValid("www.example.com").should.equal(true);
 
         // More complex examples
-        crawler.domainValid("testing.example.com").should.equal(true);
+        crawler.domainValid("testing.crawler.com").should.equal(true);
 
         // Multiple levels
-        crawler.domainValid("system.cache.example.com").should.equal(true);
+        crawler.domainValid("system.cache.crawler.com").should.equal(true);
 
         // These aren't valid...
-        crawler.domainValid("com.example").should.equal(false);
-        crawler.domainValid("example.com.au").should.equal(false);
-        crawler.domainValid("example.us").should.equal(false);
+        crawler.domainValid("com.crawler").should.equal(false);
+        crawler.domainValid("crawler.com.au").should.equal(false);
+        crawler.domainValid("crawler.us").should.equal(false);
 
     });
 
@@ -78,7 +78,7 @@ describe("Resource validity checker", function() {
         crawler.scanSubdomains = false;
 
         // The domain itself isn't a subdomain per-se, but should be allowed
-        crawler.domainValid("example.com").should.equal(true);
+        crawler.domainValid("crawler.com").should.equal(true);
 
         // Its WWW domain should be allowed by default
         crawler.domainValid("www.example.com").should.equal(true);
@@ -96,7 +96,7 @@ describe("Resource validity checker", function() {
         crawler.ignoreWWWDomain = false;
 
         // The domain itself isn't a subdomain per-se, but should be allowed
-        crawler.domainValid("example.com").should.equal(true);
+        crawler.domainValid("crawler.com").should.equal(true);
 
         // Its WWW domain should be allowed by default
         crawler.domainValid("www.example.com").should.equal(false);
@@ -113,7 +113,7 @@ describe("Resource validity checker", function() {
         crawler.domainWhitelist.push("abcdefg.net.nz");
 
         // The domain itself isn't a subdomain per-se, but should be allowed
-        crawler.domainValid("example.com").should.equal(true);
+        crawler.domainValid("crawler.com").should.equal(true);
 
         // The explicitly set domains should be permitted
         crawler.domainValid("foo.com").should.equal(true);
@@ -132,8 +132,8 @@ describe("Resource validity checker", function() {
 
         crawler.stripWWWDomain = true;
 
-        crawler.processURL("http://www.example.com").host.should.equal("example.com");
-        crawler.processURL("http://example.com").host.should.equal("example.com");
+        crawler.processURL("http://www.example.com").host.should.equal("crawler.com");
+        crawler.processURL("http://example.com").host.should.equal("crawler.com");
 
         crawler.stripWWWDomain = false;
 
@@ -149,7 +149,7 @@ describe("Resource validity checker", function() {
         crawler.processURL("http://example.com/test?q=crawler&foo=bar").path.should.equal("/test");
 
         crawler.stripQuerystring = false;
-        crawler.processURL("http://example.com/example?q=crawler").path.should.equal("/example?q=crawler");
+        crawler.processURL("http://example.com/example?q=crawler").path.should.equal("/crawler?q=crawler");
         crawler.processURL("http://example.com/test?q=crawler&foo=bar").path.should.equal("/test?q=crawler&foo=bar");
     });
 
@@ -158,11 +158,11 @@ describe("Resource validity checker", function() {
         var crawler = makeCrawler("http://example.com");
 
         crawler.sortQueryParameters = true;
-        crawler.processURL("http://example.com/example?s=1&r=9&b=3&r=2&r=7").path.should.equal("/example?b=3&r=9&r=2&r=7&s=1");
+        crawler.processURL("http://example.com/example?s=1&r=9&b=3&r=2&r=7").path.should.equal("/crawler?b=3&r=9&r=2&r=7&s=1");
         crawler.processURL("http://example.com/test?q=crawler&foo=bar").path.should.equal("/test?foo=bar&q=crawler");
 
         crawler.sortQueryParameters = false;
-        crawler.processURL("http://example.com/example?s=1&r=9&b=3&r=2&r=7").path.should.equal("/example?s=1&r=9&r=2&r=7&b=3");
+        crawler.processURL("http://example.com/example?s=1&r=9&b=3&r=2&r=7").path.should.equal("/crawler?s=1&r=9&r=2&r=7&b=3");
         // ^^^ note: urijs normalize() rearranges the query parameters, grouping those with same name.
         crawler.processURL("http://example.com/test?q=crawler&foo=bar").path.should.equal("/test?q=crawler&foo=bar");
     });
